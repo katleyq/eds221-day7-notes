@@ -121,6 +121,78 @@ penguins %>%
   count(species, island, sex)
 ```
 
+# datapasta fun!
+
 ```{r}
-library(datapasta)
+library(tidyverse)
+library(datapasta) # turn selectable table into dataframe in R
 ```
+
+copy a random dataframe from internet, select "Addins" at the top, and paste as dataframe
+
+example link: https://allisonhorst.github.io/EDS_221_programming-essentials/interactive_sessions/day_7_interactive.html
+
+```{r}
+animals <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("lagoon", "bluff", "creek", "oaks", "bluff"),
+           species = c("bobcat", "coyote", "fox", "squirrel", "bobcat"),
+          maturity = c("adult", "juvenile", "adult", "juvenile", "adult")
+)
+
+sites <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("beach", "lagoon", "bluff", "oaks"),
+    full_site_name = c("Goleta Beach","UCSB Lagoon",
+                       "Ellwood Mesa","Fremont Campground"),
+      jurisdiction = c("SB City", "UCSB", "SB City", "USFS")
+)
+```
+
+Full join:
+
+```{r}
+full_join_example <- full_join(animals, sites)
+```
+
+Left join:
+
+```{r}
+left_join_example <- left_join(animals, sites)
+```
+
+Inner join:
+
+```{r}
+inner_join_example <- inner_join(animals, sites)
+```
+
+# Date time lecture
+
+ISO 8601 format (International Organization of Standardization)
+
+Format: YYYY-MM-DD
+
+What if we have more or higher resolution in time?
+
+full date, hours, and minutes Format: YYYY-MM-DDThh::mm:TZD
+
+full date, hours, minutes, and seconds format: YYYY-MM-DDThh::mm:ssTZD
+
+TZD = UTC + or - where you are in the world
+
+### example
+
+9:07am on June 8th, 2016 in Perth, Australia (UTC+8)
+
+= 2016-06-08T09:07+08:00
+
+### example
+
+What is ISO 8601 format for February 18, 1996 at 8:34pm PST in SB? Note: SB is 7 hours behind UTC
+
+= 1996-02-18T20:34-07:00
+
+What is the ISO 8601 format for 12/5/2002 at 2:41am in SB?
+
+= 2002-12-05T02:41-07:00
