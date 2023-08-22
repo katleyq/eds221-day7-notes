@@ -1,0 +1,126 @@
+---
+title: "eds221-day7-notes"
+format: html
+editor: visual
+---
+
+## Working with relational database managements systems
+
+working with relational databases
+
+-   Mutating joins = adds new variables to one data frame from matching observations in another
+
+-   Filtering joins = filter observations from one data frame based on whether or not they match an observation in the other table
+
+-   Key = a variable that store unique information that can be used to connect information across datasets
+
+# Different types of joins
+
+## full_join(x, y)
+
+= everything from both data frames is retained, regardless of whether or not it has a match in the data frame it's being joined to
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.20.51%20AM.png)
+
+When you run full_join(animals, sites), you'll get:
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.22.33%20AM.png)
+
+## left_join(x,y)
+
+= everything in x is kept. Things from y that *have* a matching key in x are joined to it. Things in y that do *not* have a matching key in x are dropped.
+
+example:
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.26.45%20AM.png)
+
+What do we expect for left_join(animals,sites)?
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.27.47%20AM.png)
+
+## inner_join(x,y)
+
+= only keep stuff if they have a key match in x and y
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.37.39%20AM.png)
+
+What is the output of inner_join(animals, sites)?
+
+![](images/Screen%20Shot%202023-08-22%20at%2010.38.53%20AM.png)
+
+# Interactive Session 1
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+## Data wrangling refresher
+
+1.  Starting from penguins, write a single piped sequence in which you
+    -   only include penguins at Dream and Biscoe islands
+
+    -   Remove the year and sex variables
+
+    -   Add a new column body_mass_kg with penguin mass converted from g to kg
+
+    -   Rename the island variable to location
+
+```{r}
+        # my answer
+        # warmup_1 <- penguins %>% 
+        #   filter(island == "Dream" | island == "Biscoe") %>% 
+        #   select(-(year), -(sex)) %>% 
+        #   mutate(body_mass_kg = body_mass_g /1000) %>% 
+        #   mutate(location = island)
+
+        # class example
+        warmup_1 <- penguins %>% 
+          filter(island %in% c("Dream", "Biscoe")) %>% 
+          select(-year, -sex) %>% 
+          mutate(body_mass_kg = (body_mass_g /1000)) %>% 
+          mutate(location = island)
+```
+
+2.  Starting from penguins, write a single piped sequence to:
+    -   Limit to Adelie penguins
+
+    -   Remove any observation where flipper_length_mm is NA - !is.na() or drop.na()
+
+    -   Group the data by sex
+
+    -   Create a summary table that contains the mean, standard deviation, and sample size of flipper lengths for male and female Adelie penguins
+
+```{r}
+# my answer
+# warmup_2 <- penguins %>% 
+#   filter(species == "Adelie") %>% 
+#   drop_na(flipper_length_mm) %>% 
+#   group_by(sex) %>% 
+#   summarize(mean_flipper_length = mean(flipper_length_mm),
+#             sd_flipper_length = sd(flipper_length_mm),
+#             sample_size = n())
+
+# class answer
+warmup_2 <- penguins %>% 
+  filter(species == "Adelie", !is.na(flipper_length_mm)) %>% 
+  group_by(sex) %>% 
+  summarize(mean_flipper_length = mean(flipper_length_mm),
+            sd_flipper_length = sd(flipper_length_mm),
+            sample_size = n())
+```
+
+```{r}
+# count function in dyplr
+penguins %>% 
+  group_by(species, island, sex) %>% 
+  summarize(sample_size = n())
+
+#below is the same as above. count is just wrapping togetehr group_by() + summarize() + n()
+penguins %>% 
+  count(species, island, sex)
+```
+
+```{r}
+library(datapasta)
+```
